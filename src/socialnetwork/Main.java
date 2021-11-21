@@ -65,6 +65,10 @@ public class Main {
         System.out.println(rez.getFriends());*/
         //friendshipDbRepository.findAll().forEach(System.out::println);
 
+        //////
+
+        /////
+        ///
     }
 }
 
