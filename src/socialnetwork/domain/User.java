@@ -50,7 +50,7 @@ public class User extends Entity<Long>{
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
-
+//equal method
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
