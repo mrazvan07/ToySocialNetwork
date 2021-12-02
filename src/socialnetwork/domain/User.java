@@ -42,7 +42,7 @@ public class User extends Entity<Long>{
     public void deleteFriend(){
         //TO DO
     }
-
+//toString method
     @Override
     public String toString() {
         return "Utilizator{" +
