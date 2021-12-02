@@ -44,6 +44,7 @@ public class User extends Entity<Long>{
     }
 //toString method
     //comment 2
+    //comment 3
     @Override
     public String toString() {
         return "Utilizator{" +
