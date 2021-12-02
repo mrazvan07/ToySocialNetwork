@@ -32,11 +32,6 @@ public class UserService {
         return repo.findOneById(id);
     }
 
-    /*public void addFriend(User user, User friend){
-        user.getFriends().add(friend);
-        friend.getFriends().add(user);
-    }*/
-
     public User findUserByFirstAndLastName(String first_name, String last_name) {
         List<Object> args = new ArrayList<>();
         args.add(first_name);

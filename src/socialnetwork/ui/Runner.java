@@ -41,7 +41,7 @@ public class Runner {
             System.out.println("User already exists!");
     }
 
-   /* private void  UIAddFriend(User user){
+    private void  UIAddFriend(User user){
         Scanner console = new Scanner(System.in);
         System.out.println("First name: ");
         String name = console.next();
@@ -67,7 +67,7 @@ public class Runner {
         } catch (InputMismatchException ex) {
             System.out.println("Invalid friend selected!");
         }
-    }*/
+    }
 
     private void  UIDeleteFriend(User user){
         if(superService.getAllFriendsForGivenUser(user).size() == 0){
@@ -126,9 +126,9 @@ public class Runner {
             String stripped_command = command.strip();
             try{
                 switch (stripped_command){
-                    /*case ADD_FRIEND:
+                    case ADD_FRIEND:
                         UIAddFriend(user);
-                        break;*/
+                        break;
                     case DELETE_FRIEND:
                         UIDeleteFriend(user);
                         break;

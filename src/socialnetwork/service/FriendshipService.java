@@ -38,4 +38,6 @@ public class FriendshipService {
     public Iterable<Friendship> findAll() {
         return repo.findAll();
     }
+
+
 }

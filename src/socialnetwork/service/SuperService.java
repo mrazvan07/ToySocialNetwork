@@ -107,14 +107,14 @@ public class SuperService {
         return users1;
     }
 
-    /*public int addFriendForGivenUser(User given_user, User friend_to_be_added) {
-        for (User friend : friendshipService.getAllFriendsForGivenUser(given_user))
-            if (friend.equals(friend_to_be_added))
+    public int addFriendForGivenUser(User given_user, User friend_to_be_added) {
+        for (Friendship friend : friendshipService.findAll())
+            if (friend.getId().equals(new Tuple<Long,Long>(given_user.getId(),friend_to_be_added.getId())))
                 return UNSUCCESFUL_OPERATION_RETURN_CODE;
         Friendship newFriendship = new Friendship();
         newFriendship.setId(new Tuple<>(given_user.getId(),friend_to_be_added.getId()));
         friendshipService.addFriendShip(newFriendship);
         return SUCCESFUL_OPERATION_RETURN_CODE;
-    }*/
+    }
 
 }
