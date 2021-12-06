@@ -117,4 +117,15 @@ public class SuperService {
         return SUCCESFUL_OPERATION_RETURN_CODE;
     }
 
+
+    public Set<String> getAllFriendshipsForGivenUser(User user){
+        Set<String> users1 = StreamSupport.stream(friendshipService.findAll().spliterator(), false)
+                .filter(friendship->friendship.getId().getLeft().equals(user.getId()) || friendship.getId().getRight().equals(user.getId()))
+                .map(friendship -> {
+                    if(friendship.getId().getLeft().equals(user.getId()))  {User friend= userService.findUserByID(friendship.getId().getRight()); return user.getFirstName() + " | " + friend.getLastName() + " | " + friendship.getDate().toString() ;}
+                    else return userService.findUserByID(friendship.getId().getLeft()).getFirstName() + " | " + user.getLastName() + " | " + friendship.getDate().toString() ;//userService.findUserByID(friendship.getId().getLeft());
+                })
+                .collect(Collectors.toSet());
+        return users1;
+    }
 }

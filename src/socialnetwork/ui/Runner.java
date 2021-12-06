@@ -5,6 +5,7 @@ import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.repoExceptions.RepoException;
 import socialnetwork.service.SuperService;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static socialnetwork.Utils.constants.UiConstants.*;
@@ -118,6 +119,34 @@ public class Runner {
            System.out.println(friend);
     }
 
+    private void  UIShowAllFriendshipsForThisUser(){
+        Scanner console = new Scanner(System.in);
+        System.out.print("First name: ");
+        String first_name = console.next();
+        String valid_first_name = first_name.strip();
+        System.out.print("Last name: ");
+        String last_name = console.next();
+        String valid_last_name = last_name.strip();
+        User user = new User (first_name, last_name);
+        Set<String> friends = superService.getAllFriendshipsForGivenUser(user);
+        if(friends.size() == 0){
+            System.out.println("No friendships to show");
+            return;
+        }
+        for(String friend: friends)
+            System.out.println(friend);
+    }
+
+    /*private void  UIShowAllFriendshipsForThisUserandMonth(User user, LocalDateTime month){
+        Set<User> friends = superService.getAllFriendsForGivenUser(user);
+        if(friends.size() == 0){
+            System.out.println("No friends to show");
+            return;
+        }
+        for(User friend: friends)
+            System.out.println(friend);
+    }*/
+
     private void  runSelectedUserMenu(User user){
         while(true){
             showSelectedUserMenu();
@@ -224,6 +253,13 @@ public class Runner {
                     case MAIN_USER_OPERATIONS:
                         runUserOperationMenu();
                         break;
+                    case MAIN_SHOW_FRIENDSHIPS_USER:
+                        System.out.println("Show Friendships");
+                        UIShowAllFriendshipsForThisUser();
+                        break;
+                    case MAIN_SHOW_FRIENDSHIPS_MONTH:
+                        System.out.println("Show Friendships from a Month");
+                        break;
                     case MAIN_EXIT_APP:
                         System.out.println("Sayonara");
                         return;
@@ -250,6 +286,8 @@ public class Runner {
         System.out.println("4. graf");
         System.out.println("5. User Operations");
         System.out.println("6. Exit app");
+        System.out.println("7. Show friendships of a user");
+        System.out.println("8. Show friendships of a user that had been created in month");
         System.out.print(">>> ");
     }
 

@@ -35,6 +35,7 @@ public class Main {
             friendshipFileRepository = new FriendshipFileRepository(fileName2, new FriendshipValidator());
             userDbRepository = new UserDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","22adc#cJf6", new UserValidator());
             friendshipDbRepository = new FriendshipsDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","22adc#cJf6",new FriendshipValidator());
+            //I create the database and I keep the credentials from original project
         }
         catch (FileError ex){
             System.out.println(ex.getMessage());

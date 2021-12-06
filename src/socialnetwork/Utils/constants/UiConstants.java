@@ -7,6 +7,8 @@ public class UiConstants {
     public static final String MAIN_GRAF_2 = "4";
     public static final String MAIN_USER_OPERATIONS = "5";
     public static final String MAIN_EXIT_APP = "6";
+    public static final String MAIN_SHOW_FRIENDSHIPS_USER = "7";
+    public static final String MAIN_SHOW_FRIENDSHIPS_MONTH = "8";
 
     //USER OPERATIONS
     public static final String ADD_USER = "1";
