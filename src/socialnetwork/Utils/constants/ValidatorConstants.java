@@ -9,4 +9,5 @@ public class ValidatorConstants {
     public static final String VALID_FIRST_NAME = "/\b[A-Z][a-z]+\b/gm";
     public static final String VALID_LAST_NAME = "/\b[A-Z][a-z]+\b/gm";
     public static final Long TEMPORARY_USER_ID = 0L;
+    public static final Long TEMPORARY_MESSAGE_ID = -1L;
 }

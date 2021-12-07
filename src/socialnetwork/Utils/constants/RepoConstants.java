@@ -35,4 +35,7 @@ public class RepoConstants {
     public static final String DELETE_MESSAGE_DB = "update messages "+
                                                     "set delete_status = ? "+
                                                     "where id_mesaj = ?";
+    public static final String UPDATE_MESSAGE_DB =  "update messages "+
+                                                    "set delete_status = ? "+
+                                                    "where id_mesaj = ?";
 }

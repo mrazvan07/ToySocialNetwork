@@ -1,5 +1,6 @@
 package socialnetwork.ui;
 
+import socialnetwork.domain.Message;
 import socialnetwork.domain.User;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.repoExceptions.RepoException;
@@ -7,8 +8,11 @@ import socialnetwork.service.SuperService;
 
 import java.util.*;
 
+import static socialnetwork.Utils.constants.DomainConstants.ACTIVE_MESSAGE;
+import static socialnetwork.Utils.constants.DomainConstants.SIMPLE_MESSAGE;
 import static socialnetwork.Utils.constants.UiConstants.*;
 import static socialnetwork.Utils.constants.RepoConstants.*;
+import static socialnetwork.Utils.constants.ValidatorConstants.DATE_TIME_FORMATTER;
 
 
 public class Runner {
@@ -120,13 +124,107 @@ public class Runner {
 
     private void showConversationBetweenTwoUsers(User user1, User user2){
         System.out.println("==================== CONVO ====================");
-        System.out.println(".");
-        System.out.println(".");
-        System.out.println("aici conversatia");
-        System.out.println(".");
-        System.out.println(".");
+        List<Message> convo = superService.getMessagesBetweenTwoUsers(user1,user2);
+        for(int i = 0; i < convo.size(); i++){
+            String line = new String(new char[70]).replace('\0', ' ');
+            Message current_message = convo.get(i);
+            String body_message = null;
+            if(current_message.getDeleteStatus().equals(ACTIVE_MESSAGE))
+                body_message = current_message.getMesaj();
+            else
+                body_message = "<<deleted>>";
+            User from = superService.findUserById(current_message.getIdFrom());
+            if(convo.get(i).getIdReply()!=-1) {
+                for (int j = 0; j < i; j++)
+                    if (convo.get(j).getId().equals(convo.get(i).getIdReply())) {
+
+                        String start_line = String.format("%d. --reply to %d-- %s: %s", i, j, from.getLastName(), body_message);
+                        line = insertString(line, start_line, 0);
+                        int date_length = current_message.getDataTrimitere().format(DATE_TIME_FORMATTER).length();
+                        int index_to_insert_data = 85-date_length;
+                        line = insertString(line,current_message.getDataTrimitere().format(DATE_TIME_FORMATTER),index_to_insert_data);
+                        System.out.println(line);
+                        break;
+                    }
+            }
+            else {
+                        String start_line = String.format("%d.                %s: %s", i, from.getLastName(), body_message);
+                        line = insertString(line,start_line,0);
+                        int date_length = current_message.getDataTrimitere().format(DATE_TIME_FORMATTER).length();
+                        int index_to_insert_data = 85-date_length;
+                        line = insertString(line,current_message.getDataTrimitere().format(DATE_TIME_FORMATTER),index_to_insert_data);
+                        System.out.println(line);
+            }
+        }
     }
 
+    private void UISendMessage(User user1, User user2){
+        System.out.print("Insert new message: ");
+        Scanner console = new Scanner(System.in);
+        String message = console.nextLine();
+        String stripped_message = message.strip();
+        superService.addMessageBetweenTwoUsers(user1,user2,stripped_message,SIMPLE_MESSAGE);
+    }
+
+   private void UIReplyMessage(User user1,User user2){
+       System.out.print("Message index to which you reply: ");
+       Scanner console = new Scanner(System.in);
+       String index = console.nextLine();
+       int input_index = -1;
+       try{
+           input_index = Integer.parseInt(index);
+       } catch (NumberFormatException ex){
+           System.out.println("Invalid index!");
+           return;
+       }
+       if(input_index < 0 || input_index >= superService.getMessagesBetweenTwoUsers(user1,user2).size()){
+           System.out.println("Invalid index!");
+           return;
+       }
+       System.out.print("New Reply: ");
+       String message = console.nextLine();
+       String stripped_message = message.strip();
+       superService.addMessageBetweenTwoUsers(user1,user2,stripped_message,superService.getMessagesBetweenTwoUsers(user1,user2).get(input_index).getId());
+
+   }
+
+   private void UIDeleteMessage(User user1,User user2){
+        List<Message> convo = superService.getMessagesBetweenTwoUsers(user1,user2);
+        System.out.print("Index of message to be deleted: ");
+        Scanner console = new Scanner(System.in);
+        String index = console.nextLine();
+        int input_index = -1;
+        try{
+            input_index = Integer.parseInt(index);
+        } catch (NumberFormatException ex){
+            System.out.println("Invalid index!");
+            return;
+        }
+        if(input_index < 0 || input_index >=convo.size() || !convo.get(input_index).getIdFrom().equals(user1.getId())){
+            System.out.println("Invalid index!");
+            return;
+        }
+        superService.deleteMessage(convo.get(input_index));
+    }
+
+    private void UIUndoDeleteMessage(User user1,User user2){
+        List<Message> convo = superService.getMessagesBetweenTwoUsers(user1,user2);
+        System.out.print("Index of a deleted message: ");
+        Scanner console = new Scanner(System.in);
+        String index = console.nextLine();
+        int input_index = -1;
+        try{
+            input_index = Integer.parseInt(index);
+        } catch (NumberFormatException ex){
+            System.out.println("Invalid index!");
+            return;
+        }
+        if(input_index < 0 || input_index >=convo.size() || !convo.get(input_index).getIdFrom().equals(user1.getId()) || convo.get(input_index).getDeleteStatus().equals(ACTIVE_MESSAGE)){
+            System.out.println("Invalid index!");
+            return;
+        }
+        superService.undoDeleteMessage(convo.get(input_index));
+    }
     private void runUserConversationMenu(User user1, User user2){
         while(true){
             showConversationBetweenTwoUsers(user1,user2);
@@ -137,16 +235,16 @@ public class Runner {
             try{
                 switch (stripped_command){
                     case SEND_MESSAGE:
-                        //UISendMessage(user1, user2);
+                        UISendMessage(user1, user2);
                         break;
                     case REPLY_TO_MESSAGE:
-                        //UIReplyMessage(user1,user2)
+                        UIReplyMessage(user1,user2);
                         break;
                     case DELETE_MESSAGE:
-                        //UIDelteMessafge(user1,user2)
+                        UIDeleteMessage(user1,user2);
                         break;
                     case UNDO_DELETE_MESSAGE:
-                        //UIUndoDelteMessage
+                        UIUndoDeleteMessage(user1,user2);
                         break;
                     case RETURN_TO_SELECTED_USER_OPERATIONS_MENU:
                         return;
@@ -354,6 +452,17 @@ public class Runner {
         System.out.println("4. Undo delete message");
         System.out.println("5. Return to Selected User Operations Menu");
         System.out.print(">>> ");
+    }
+
+    private String insertString(String originalString, String stringToBeInserted, int index) {
+        String newString = new String();
+        for (int i = 0; i < originalString.length(); i++) {
+            newString += originalString.charAt(i);
+            if (i == index) {
+                newString += stringToBeInserted;
+            }
+        }
+        return newString;
     }
 
 }

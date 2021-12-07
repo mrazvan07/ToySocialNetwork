@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static socialnetwork.Utils.constants.DomainConstants.ACTIVE_MESSAGE;
 import static socialnetwork.Utils.constants.DomainConstants.DELETED_MESSAGE;
 import static socialnetwork.Utils.constants.RepoConstants.*;
 
@@ -95,8 +96,18 @@ public class MessageDbRepository implements Repository<Long, Message> {
 
     @Override
     public void update(Message entity) {
-       //de implementat daca e nevoie
+       String sql = UPDATE_MESSAGE_DB;
+       try(Connection connection = DriverManager.getConnection(url,username,password);
+           PreparedStatement preparedStatement = connection.prepareStatement(sql))
+       {
+          preparedStatement.setString(1,entity.getDeleteStatus());
+          preparedStatement.setLong(2,entity.getId());
+          preparedStatement.executeUpdate();
+       } catch (SQLException ex){
+           ex.printStackTrace();
+       }
     }
+
 
     private List<Message> getMessages(PreparedStatement preparedStatement) throws SQLException {
         List<Message> messages = new ArrayList<>();

@@ -4,7 +4,7 @@ import socialnetwork.domain.Message;
 import socialnetwork.repository.Repository;
 
 public class MessageService {
-    Repository<Long, Message> repo;
+    private Repository<Long, Message> repo;
 
     public MessageService(Repository<Long,Message> repo){
         this.repo = repo;
@@ -18,7 +18,16 @@ public class MessageService {
         repo.delete(id);
     }
 
+    public void undoMessageDelete(Message message){
+        repo.update(message);
+    }
+
     public Iterable<Message> findAll(){
         return repo.findAll();
     }
+
+    public Message findMessageById(Long id){
+        return repo.findOneById(id);
+    }
+
 }

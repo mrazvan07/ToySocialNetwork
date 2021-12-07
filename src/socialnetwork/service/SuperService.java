@@ -1,6 +1,7 @@
 package socialnetwork.service;
 
 import socialnetwork.domain.Friendship;
+import socialnetwork.domain.Message;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.User;
 
@@ -10,7 +11,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static socialnetwork.Utils.constants.DomainConstants.*;
 import static socialnetwork.Utils.constants.RepoConstants.*;
+import static socialnetwork.Utils.constants.ValidatorConstants.TEMPORARY_MESSAGE_ID;
 
 public class SuperService {
     private FriendshipService friendshipService = null;
@@ -118,6 +121,51 @@ public class SuperService {
         newFriendship.setId(new Tuple<>(given_user.getId(),friend_to_be_added.getId()));
         friendshipService.addFriendShip(newFriendship);
         return SUCCESFUL_OPERATION_RETURN_CODE;
+    }
+
+    public List<Message> getMessagesBetweenTwoUsers(User user1, User user2){
+        List<Message> convo = StreamSupport.stream(messageService.findAll().spliterator(), false)
+                .filter(message ->  (message.getIdFrom().equals(user1.getId()) && message.getIdTo().equals(user2.getId())) ||
+                                    (message.getIdFrom().equals(user2.getId()) && message.getIdTo().equals(user1.getId())) ||
+                                    (message.getIdFrom().equals(user1.getId()) && message.getIdTo().equals(user1.getId())) && checkIfSelfReplyBelongsToRightConversation(user1,user2,message) ||
+                                    (message.getIdFrom().equals(user2.getId()) && message.getIdTo().equals(user2.getId())) && checkIfSelfReplyBelongsToRightConversation(user1,user2, message))
+                .sorted(Comparator.comparing(Message::getDataTrimitere))
+                .collect(Collectors.toList());
+        return convo;
+    }
+
+    public void addMessageBetweenTwoUsers(User user1, User user2, String message, Long reply_status){
+        Message new_message = null;
+        if(reply_status.equals(SIMPLE_MESSAGE))
+            new_message = new Message(user1.getId(),user2.getId(),message,SIMPLE_MESSAGE);
+        else
+            new_message = new Message(user1.getId(),user2.getId(),message,reply_status);
+        new_message.setId(TEMPORARY_MESSAGE_ID);
+        messageService.addMessage(new_message);
+    }
+
+    public void deleteMessage(Message message){
+        messageService.deleteMessage(message.getId());
+    }
+
+    public void undoDeleteMessage(Message message){
+        message.setDeleteStatus(ACTIVE_MESSAGE);
+        messageService.undoMessageDelete(message);
+    }
+
+    public User findUserById(Long id){
+        return userService.findUserByID(id);
+    }
+
+    private boolean checkIfSelfReplyBelongsToRightConversation(User user1, User user2,Message message){
+        Message current_message = message;
+        while(current_message.getIdFrom().equals(current_message.getIdTo())){
+            current_message = messageService.findMessageById(current_message.getIdReply());
+        }
+        if(current_message.getIdFrom().equals(user1.getId()) && current_message.getIdTo().equals(user2.getId()) ||
+                current_message.getIdFrom().equals(user2.getId()) && current_message.getIdTo().equals(user1.getId()))
+            return true;
+        return false;
     }
 
 }

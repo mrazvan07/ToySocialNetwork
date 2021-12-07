@@ -62,26 +62,6 @@ public class Main {
         SuperService superService = new SuperService(friendshipService,userService,messageService);
         Runner runner = new Runner(superService);
         runner.runApp();
-        //repoDB.findAll().forEach(System.out::println);
-     /*   String first = "hagi";
-        String last = "gica";
-        List<Object> str = new ArrayList<>();
-        str.add(first);
-        str.add(last);
-        User rez = userDbRepository.findOneByOtherAttributes(str);
-        System.out.println(rez.getFriends());*/
-        //friendshipDbRepository.findAll().forEach(System.out::println);
-
-        //////
-
-        /////
-        ///
-        //comm test
-        //de aici teste
-
-        /*Message new_mes = new Message(6L,7L,"hey",-1L);
-        messageDbRepository.delete(2L);*/
-
     }
 }
 

@@ -98,6 +98,10 @@ public class Message extends Entity<Long>{
         return delete_status;
     }
 
+    public void setDeleteStatus(String new_status){
+        this.delete_status = new_status;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
