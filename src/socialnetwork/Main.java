@@ -15,6 +15,7 @@ import socialnetwork.repository.file.UserFileRepository;
 import socialnetwork.repository.repoExceptions.FileError;
 import socialnetwork.repository.repoExceptions.RepoException;
 import socialnetwork.service.FriendshipService;
+import socialnetwork.service.MessageService;
 import socialnetwork.service.SuperService;
 import socialnetwork.service.UserService;
 import socialnetwork.ui.Runner;
@@ -32,12 +33,14 @@ public class Main {
         Repository<Tuple<Long,Long>, Friendship> friendshipFileRepository = null;
         Repository<Long, User> userDbRepository = null;
         Repository<Tuple<Long,Long>, Friendship> friendshipDbRepository = null;
+        Repository<Long, Message> messageDbRepository = null;
         try {
             userFileRepository = new UserFileRepository(fileName
                     , new UserValidator());
             friendshipFileRepository = new FriendshipFileRepository(fileName2, new FriendshipValidator());
             userDbRepository = new UserDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","22adc#cJf6", new UserValidator());
             friendshipDbRepository = new FriendshipsDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","22adc#cJf6",new FriendshipValidator());
+            messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","22adc#cJf6", new MessageValidator());
         }
         catch (FileError ex){
             System.out.println(ex.getMessage());
@@ -55,9 +58,10 @@ public class Main {
         //DataBase
         UserService userService = new UserService(userDbRepository);
         FriendshipService friendshipService = new FriendshipService(friendshipDbRepository);
-        SuperService superService = new SuperService(friendshipService,userService);
+        MessageService messageService = new MessageService(messageDbRepository);
+        SuperService superService = new SuperService(friendshipService,userService,messageService);
         Runner runner = new Runner(superService);
-        //runner.runApp();
+        runner.runApp();
         //repoDB.findAll().forEach(System.out::println);
      /*   String first = "hagi";
         String last = "gica";
@@ -74,9 +78,9 @@ public class Main {
         ///
         //comm test
         //de aici teste
-        Repository<Long, Message> messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","22adc#cJf6", new MessageValidator());
-        Message new_mes = new Message(6L,7L,"hey",-1L);
-        messageDbRepository.delete(2L);
+
+        /*Message new_mes = new Message(6L,7L,"hey",-1L);
+        messageDbRepository.delete(2L);*/
 
     }
 }

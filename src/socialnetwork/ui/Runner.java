@@ -118,6 +118,78 @@ public class Runner {
            System.out.println(friend);
     }
 
+    private void showConversationBetweenTwoUsers(User user1, User user2){
+        System.out.println("==================== CONVO ====================");
+        System.out.println(".");
+        System.out.println(".");
+        System.out.println("aici conversatia");
+        System.out.println(".");
+        System.out.println(".");
+    }
+
+    private void runUserConversationMenu(User user1, User user2){
+        while(true){
+            showConversationBetweenTwoUsers(user1,user2);
+            showConversationMenu();
+            Scanner console = new Scanner(System.in);
+            String command = console.next();
+            String stripped_command = command.strip();
+            try{
+                switch (stripped_command){
+                    case SEND_MESSAGE:
+                        //UISendMessage(user1, user2);
+                        break;
+                    case REPLY_TO_MESSAGE:
+                        //UIReplyMessage(user1,user2)
+                        break;
+                    case DELETE_MESSAGE:
+                        //UIDelteMessafge(user1,user2)
+                        break;
+                    case UNDO_DELETE_MESSAGE:
+                        //UIUndoDelteMessage
+                        break;
+                    case RETURN_TO_SELECTED_USER_OPERATIONS_MENU:
+                        return;
+                    default:
+                        System.out.println("Invalid command!");
+                }
+            } catch (RepoException | ValidationException ex){
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    private void UIShowConversation(User user){
+        Scanner console = new Scanner(System.in);
+        System.out.print("User name: ");
+        String name = console.next();
+        String stripped_name = name.strip();
+        List<User> usersMatchingName = superService.findUsersByName(stripped_name);
+        if(usersMatchingName.size() == 0){
+            System.out.println("No users found mathcing this name!");
+            return;
+        }
+        for(int i=0;i<usersMatchingName.size();i++)
+            System.out.println(String.format("%d. ", i) + usersMatchingName.get(i));
+        while(true) {
+            try {
+                System.out.println("Select a user: ");
+                System.out.print(">>> ");
+                Integer selected_user_index = console.nextInt();
+                if(selected_user_index<0 || selected_user_index >= usersMatchingName.size()){
+                    System.out.println("Invalid user selected!");
+                    break;
+                }
+                runUserConversationMenu(user,usersMatchingName.get(selected_user_index));
+                return;
+
+            } catch (InputMismatchException ex) {
+                System.out.println("Invalid user selected!");
+                break;
+            }
+        }
+    }
+
     private void  runSelectedUserMenu(User user){
         while(true){
             showSelectedUserMenu();
@@ -137,6 +209,9 @@ public class Runner {
                         return;
                     case SHOW_ALL_FRIENDS_FOR_THIS_USER:
                         UIShowAllFriendsForThisUser(user);
+                        break;
+                    case SHOW_CONVERSATION_BETWEEN_TWO_USERS:
+                        UIShowConversation(user);
                         break;
                     case RETURN_TO_USER_OPERATIONS:
                         return;
@@ -241,7 +316,6 @@ public class Runner {
         runMainMenu();
     }
 
-
     private void showMainMenu(){
         System.out.println("==================== MENU ====================");
         System.out.println("1. Show all users");
@@ -267,12 +341,19 @@ public class Runner {
         System.out.println("2. Delete friend");
         System.out.println("3. Delete this user");
         System.out.println("4. Show all friendships for this user");
-        System.out.println("5. Return to User Operations Menu");
+        System.out.println("5. Show conversation between this user and another");
+        System.out.println("6. Return to User Operations Menu");
         System.out.print(">>> ");
     }
 
-
-
-
+    private void showConversationMenu(){
+        System.out.println("==================== CONVERSATION MENU ====================");
+        System.out.println("1. Send new message");
+        System.out.println("2. Reply to a certain message");
+        System.out.println("3. Delete message");
+        System.out.println("4. Undo delete message");
+        System.out.println("5. Return to Selected User Operations Menu");
+        System.out.print(">>> ");
+    }
 
 }

@@ -15,6 +15,7 @@ import static socialnetwork.Utils.constants.RepoConstants.*;
 public class SuperService {
     private FriendshipService friendshipService = null;
     private UserService userService = null;
+    private MessageService messageService = null;
 
     private Long genereateUserID(){
         long leftLimit = 100L;
@@ -36,9 +37,11 @@ public class SuperService {
 
 
 
-    public SuperService(FriendshipService friendshipService, UserService userService){
+    public SuperService(FriendshipService friendshipService, UserService userService,MessageService messageService){
         this.friendshipService = friendshipService;
         this.userService = userService;
+        this.messageService = messageService;
+
         //initializeFriendshipLists();
     }
 

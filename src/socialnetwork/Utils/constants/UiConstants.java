@@ -18,5 +18,12 @@ public class UiConstants {
     public static final String DELETE_FRIEND = "2";
     public static final String DELETE_THIS_USER = "3";
     public static final String SHOW_ALL_FRIENDS_FOR_THIS_USER = "4";
-    public static final String RETURN_TO_USER_OPERATIONS = "5";
+    public static final String SHOW_CONVERSATION_BETWEEN_TWO_USERS = "5";
+    public static final String RETURN_TO_USER_OPERATIONS = "6";
+
+    public static final String SEND_MESSAGE = "1";
+    public static final String REPLY_TO_MESSAGE = "2";
+    public static final String DELETE_MESSAGE = "3";
+    public static final String UNDO_DELETE_MESSAGE = "4";
+    public static final String RETURN_TO_SELECTED_USER_OPERATIONS_MENU = "5";
 }
