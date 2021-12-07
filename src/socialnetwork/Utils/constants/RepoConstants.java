@@ -27,4 +27,12 @@ public class RepoConstants {
     public static final String SAVE_FRIENDSHIP_DB = "insert into friendships(id_1,id_2,date_of_creation) values(?,?,?)";
     public static final String SELECT_ALL_FRIENDSHIP_DB = "SELECT * from friendships";
 
+    //Sql instructions for 'messages' table
+    public static final String FIND_MESSAGE_BY_ID_DB = "select id_mesaj,id_from,id_to,mesaj,data_trimitere,id_reply,delete_status "+
+                                                    "from messages where id_mesaj = ?";
+    public static final String SELECT_ALL_MESSAGES_DB = "select * from messages";
+    public static final String SAVE_MESSAGE_DB = "insert into messages(id_from,id_to,mesaj,data_trimitere,id_reply,delete_status) values(?,?,?,?,?,?)";
+    public static final String DELETE_MESSAGE_DB = "update messages "+
+                                                    "set delete_status = ? "+
+                                                    "where id_mesaj = ?";
 }

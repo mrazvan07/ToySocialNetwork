@@ -1,11 +1,14 @@
 package socialnetwork;
 import socialnetwork.domain.Friendship;
+import socialnetwork.domain.Message;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.User;
 import socialnetwork.domain.validators.FriendshipValidator;
+import socialnetwork.domain.validators.MessageValidator;
 import socialnetwork.domain.validators.UserValidator;
 import socialnetwork.repository.Repository;
 import socialnetwork.repository.database.FriendshipsDbRepository;
+import socialnetwork.repository.database.MessageDbRepository;
 import socialnetwork.repository.database.UserDbRepository;
 import socialnetwork.repository.file.FriendshipFileRepository;
 import socialnetwork.repository.file.UserFileRepository;
@@ -54,7 +57,7 @@ public class Main {
         FriendshipService friendshipService = new FriendshipService(friendshipDbRepository);
         SuperService superService = new SuperService(friendshipService,userService);
         Runner runner = new Runner(superService);
-        runner.runApp();
+        //runner.runApp();
         //repoDB.findAll().forEach(System.out::println);
      /*   String first = "hagi";
         String last = "gica";
@@ -70,6 +73,11 @@ public class Main {
         /////
         ///
         //comm test
+        //de aici teste
+        Repository<Long, Message> messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/academic","postgres","22adc#cJf6", new MessageValidator());
+        Message new_mes = new Message(6L,7L,"hey",-1L);
+        messageDbRepository.delete(2L);
+
     }
 }
 
